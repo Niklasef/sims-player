@@ -54,9 +54,19 @@ def render(state):
     print('')
     print('_______________________________________________________________')
 
-def run():
+def await_click():
     state_left = win32api.GetKeyState(0x01)  # Left button down = 0 or 1. Button up = -127 or -128
     state_right = win32api.GetKeyState(0x02)  # Right button down = 0 or 1. Button up = -127 or -128
+    while True:
+        a = win32api.GetKeyState(0x01)
+        if a != state_left:  # Button state changed
+            state_left = a
+            if a >= 0:
+                ox, oy = win32api.GetCursorPos()
+                return (ox, oy)
+        time.sleep(0.001)
+
+def run():
     positions = [162, 297, 442, 531]
     
     state = (['1', '2', '3', '4'], 0)
@@ -65,24 +75,16 @@ def run():
     currentI = [i for i, x in enumerate(state[0]) if int(x) == current][0]
     while True:
         render(state)
-        clicked = False
         if current > 4:
             return
-        while not clicked:
-            a = win32api.GetKeyState(0x01)
-            if a != state_left:  # Button state changed
-                state_left = a
-                if a >= 0:
-                    state[1] += 1
-                    ox, oy = win32api.GetCursorPos()
-                    isInside = inside(ox, oy, positions[currentI])
-                    clicked = True
-                    if isInside:
-                        current += 1
-                        state[0][currentI] = 'X'
-                        if current <= 4:
-                            currentI = [i for i, x in enumerate(state[0]) if x != 'X' and int(x) == current][0]
-            time.sleep(0.001)
+        mouse_click_pos = await_click()
+        state = (state[0], state[1] + 1)
+        is_inside = inside(mouse_click_pos[0], mouse_click_pos[1], positions[currentI])
+        if is_inside:
+            current += 1
+            state[0][currentI] = 'X'
+            if current <= 4:
+                currentI = [i for i, x in enumerate(state[0]) if x != 'X' and int(x) == current][0]
 
 run()
 print("Won")
