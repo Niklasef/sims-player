@@ -17,8 +17,8 @@ import random
 # game area: 950, 565
 # origo offset: 8, 41
 
-def inside(ox, oy, currentStateX):
-    return ox > currentStateX and ox < (currentStateX+8) and oy > 320 and oy < 330
+def inside(coordinate, currentStateX):
+    return coordinate[0] > currentStateX and coordinate[0] < (currentStateX+8) and coordinate[1] > 320 and coordinate[1] < 330
 
 def render(state):
     os.system('cls')
@@ -71,10 +71,8 @@ def step(state):
     sorted_unclicked = sorted(map(lambda x: int(x), filter(lambda x: x != 'X', state[0])))
     if len(sorted_unclicked) == 0:
         return (state[0], state[1], True)
-    current = sorted_unclicked[0]
-    current_i = [i for i, x in enumerate(state[0]) if x != 'X' and int(x) == current][0]
-    mouse_click_pos = await_click()
-    if inside(mouse_click_pos[0], mouse_click_pos[1], positions[current_i]):
+    current_i = [i for i, x in enumerate(state[0]) if x != 'X' and int(x) == sorted_unclicked[0]][0]
+    if inside(await_click(), positions[current_i]):
         state[0][current_i] = 'X'
     return (state[0], state[1] + 1, state[2])
 
