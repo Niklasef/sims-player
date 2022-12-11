@@ -14,13 +14,11 @@ import random
 # Fourth
 # 525, 320 - 533, 330
 
-# game are: 950, 565
+# game area: 950, 565
 # origo offset: 8, 41
 
 def inside(ox, oy, currentStateX):
     return ox > currentStateX and ox < (currentStateX+8) and oy > 320 and oy < 330
-
-# def step(state):
 
 def render(state):
     os.system('cls')
