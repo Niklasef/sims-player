@@ -59,7 +59,7 @@ def main():
         print('')
         print('')
         print('')
-        print('')    
+        print('_______________________________________________________________')
         clicked = False
         if current > 4:
             return
