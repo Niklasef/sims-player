@@ -22,8 +22,8 @@ def inside(ox, oy, currentStateX):
 
 def render(state):
     os.system('cls')
-    print(str(state[1]))
-    print('')
+    print('Clicks: ' + str(state[1]))
+    print('_______________________________________________________________')
     print('')
     print('')
     print('')
