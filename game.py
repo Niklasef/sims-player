@@ -66,25 +66,25 @@ def await_click():
                 return (ox, oy)
         time.sleep(0.001)
 
-def run():
+def step(state):
     positions = [162, 297, 442, 531]
-    
-    state = (['1', '2', '3', '4'], 0)
-    random.shuffle(state[0])
-    current = 1
-    currentI = [i for i, x in enumerate(state[0]) if int(x) == current][0]
-    while True:
-        render(state)
-        if current > 4:
-            return
-        mouse_click_pos = await_click()
-        state = (state[0], state[1] + 1)
-        is_inside = inside(mouse_click_pos[0], mouse_click_pos[1], positions[currentI])
-        if is_inside:
-            current += 1
-            state[0][currentI] = 'X'
-            if current <= 4:
-                currentI = [i for i, x in enumerate(state[0]) if x != 'X' and int(x) == current][0]
 
-run()
+    render(state)
+    sorted_unclicked = sorted(map(lambda x: int(x), filter(lambda x: x != 'X', state[0])))
+    if len(sorted_unclicked) == 0:
+        return (state[0], state[1], True)
+    current = sorted_unclicked[0]
+    current_i = [i for i, x in enumerate(state[0]) if x != 'X' and int(x) == current][0]
+    mouse_click_pos = await_click()
+    if inside(mouse_click_pos[0], mouse_click_pos[1], positions[current_i]):
+        state[0][current_i] = 'X'
+    return (state[0], state[1] + 1, state[2])
+
+def main():    
+    state = (['1', '2', '3', '4'], 0, False)
+    random.shuffle(state[0])
+    while not state[2]:
+        state = step(state)
+
+main()
 print("Won")
