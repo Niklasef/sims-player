@@ -67,14 +67,16 @@ def await_click():
 def step(state):
     positions = [162, 297, 442, 531]
 
-    render(state)
     sorted_unclicked = sorted(map(lambda x: int(x), filter(lambda x: x != 'X', state[0])))
     if len(sorted_unclicked) == 0:
+        render(state)
         return (state[0], state[1], True)
     current_i = [i for i, x in enumerate(state[0]) if x != 'X' and int(x) == sorted_unclicked[0]][0]
     if inside(await_click(), positions[current_i]):
         state[0][current_i] = 'X'
-    return (state[0], state[1] + 1, state[2])
+    state = (state[0], state[1] + 1, state[2]);
+    render(state)
+    return state
 
 def main():    
     state = (['1', '2', '3', '4'], 0, False)
@@ -82,5 +84,5 @@ def main():
     while not state[2]:
         state = step(state)
 
-main()
-print("Won")
+# main()
+# print("Won")
